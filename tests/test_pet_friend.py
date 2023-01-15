@@ -62,6 +62,25 @@ def test_successful_update_self_pet_info(name='Боба', animal_type='Медв�
     else:
         # если список питомцев пустой, то выкидываем исключение с текстом об отсутствии своих питомцев
         raise Exception("There is no my pets")
+#6
+def test_new_pet_without_photo(name='Мосик', animal_type='пингвин',age='1'):
+    """Проверяем что можно добавить питомца с корректными данными"""
+    _, auth_key = pf.get_api_key(valid_email, valid_password)
+    status, result = pf.add_new_pet_without_photo(auth_key, name, animal_type, age)
+    assert status == 200
+    assert result['name'] == name
+
+#7
+def test_add_new_pet_photo(pet_photo='images/3.jpeg'):
+    """Проверяем возможность добавления фотографии о питомце"""
+    pet_photo = os.path.join(os.path.dirname(__file__), pet_photo)
+    _, auth_key = pf.get_api_key(valid_email, valid_password)
+    _, my_pets = pf.get_list_of_pets(auth_key, "my_pets")
+    pet_id = my_pets['pets'][0]['id']
+    status, result = pf.add_new_pet_photo(auth_key, pet_id, pet_photo)
+    assert status == 200
+    assert result['pet_photo'] is not None
+       
 
 # Негативные тесты
 #1
